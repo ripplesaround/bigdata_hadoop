@@ -3,6 +3,7 @@ package com.company;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Scanner;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -13,8 +14,8 @@ import org.apache.hadoop.io.IOUtils;
 
 public class Main {
     public static void main(String[] args) throws IOException, URISyntaxException {
-//        upload();
-        download();
+        upload();
+//        download();
     }
     public static void test(String[] args) {
         try {
@@ -57,15 +58,36 @@ public class Main {
         FileSystem fs = FileSystem.get(new URI(hdfs),conf);
         if(fs.exists(new Path(hdfs+dst_path+filename))){
             System.out.println("文件存在");
+            System.out.println("1.覆盖 2.追加");
+            System.out.print(">>>");
+            Scanner s = new Scanner(System.in);
+            int temp = s.nextInt();
             byte[] buff = input2bytearray(filename);
-            FSDataOutputStream os = fs.append(new Path(dst_path+filename));
-            os.write(buff,0,buff.length);
-            os.close();
+            if(temp==2){
+                FSDataOutputStream os = fs.append(new Path(dst_path+filename));
+                os.write(buff,0,buff.length);
+                os.close();
+            }
+            else if(temp==1){
+                fs.delete(new Path(dst_path+filename),true);
+                FSDataOutputStream os = fs.create(new Path(dst_path+filename));
+                os.write(buff,0,buff.length);
+                os.close();
+            }
         }
         else{
             System.out.println("文件不存在");
             fs.copyFromLocalFile(new Path(filename),new Path(dst_path));
         }
+        FSDataInputStream in = fs.open(new Path(dst_path+filename));
+        System.out.println("文件内容");
+        System.out.println("--------------");
+        byte[] buff = new byte[1024*4];
+        int length = 0;
+        while((length=in.read(buff))!=-1){
+            System.out.println(new String(buff,0,length));
+        }
+        System.out.println("--------------");
         fs.close();
         System.out.println("upload done");
     }
@@ -92,6 +114,7 @@ public class Main {
         fs.close();
         System.out.println("download done");
     }
+
 
 
 }
