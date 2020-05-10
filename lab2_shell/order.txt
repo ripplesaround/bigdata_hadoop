@@ -1,0 +1,9 @@
+hdfs dfs -ls input
+hdfs dfs -cat input/core-site.xml
+hdfs dfs -mkdir test
+hdfs dfs -put ./helloworld.txt test
+hdfs dfs -get ./test/helloworld.txt test.txt
+hdfs dfs -rm ./test/helloworld.txt
+
+
+
