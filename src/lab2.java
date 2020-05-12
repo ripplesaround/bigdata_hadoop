@@ -1,5 +1,3 @@
-package com.company;
-
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -12,12 +10,13 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
 
-public class Main {
+public class lab2 {
     public static void main(String[] args) throws IOException, URISyntaxException {
-        upload();
+//        upload();
 //        download();
+//        test("test.txt");
     }
-    public static void test(String[] args) {
+    public static void test(String args) {
         try {
             String filename = "hdfs://localhost:9000/user/hadoop/test/test.txt";
             Configuration conf = new Configuration();
