@@ -1,0 +1,13 @@
+create 'student','Sname','Ssex','Sage','Sdept','course'
+put 'student','95001','Sname','LiYing'
+put 'student','95001','course:math','80'
+
+put 'student','95002','Sname','hello'
+put 'student','95002','course:computer','100'
+
+scan 'student'
+count 'student'
+
+delete 'student','95002','course:computer'
+
+truncate 'student'
