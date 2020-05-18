@@ -1,0 +1,3 @@
+./bin/hadoop jar ./myapp/bigdata_hadoop.jar input output
+./bin/hdfs dfs -cat output/*
+./bin/hdfs dfs -rm -r /user/hadoop/output
