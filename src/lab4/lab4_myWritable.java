@@ -1,4 +1,4 @@
-//
+package lab4;//
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
@@ -8,8 +8,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.io.WritableComparable;
-import org.apache.hadoop.io.WritableComparator;
 
 
 public class lab4_myWritable implements Writable {
@@ -58,7 +56,7 @@ public class lab4_myWritable implements Writable {
 //        return this.value;
 //    }
 //
-//    public int compareTo(lab4_myWritable o) {
+//    public int compareTo(lab4.lab4_myWritable o) {
 //        int thisValue = this.value;
 //        int thatValue = o.value;
 //        return thisValue < thatValue ? -1 : (thisValue == thatValue ? 0 : 1);
@@ -69,12 +67,12 @@ public class lab4_myWritable implements Writable {
     }
 
 //    static {
-//        WritableComparator.define(lab4_myWritable.class, new lab4_myWritable.Comparator());
+//        WritableComparator.define(lab4.lab4_myWritable.class, new lab4.lab4_myWritable.Comparator());
 //    }
 
 //    public static class Comparator extends WritableComparator {
 //        public Comparator() {
-//            super(lab4_myWritable.class);
+//            super(lab4.lab4_myWritable.class);
 //        }
 //
 //        public int compare(byte[] b1, int s1, int l1, byte[] b2, int s2, int l2) {

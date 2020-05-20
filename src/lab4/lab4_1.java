@@ -1,3 +1,5 @@
+package lab4;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.StringTokenizer;
@@ -9,7 +11,6 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
@@ -20,10 +21,10 @@ public class lab4_1 {
         Configuration conf = new Configuration();
         String[] otherArgs = (new GenericOptionsParser(conf, args)).getRemainingArgs();
         if(otherArgs.length < 2) {
-            System.err.println("Usage: lab4_1 <in> [<in>...] <out>");
+            System.err.println("Usage: lab4.lab4_1 <in> [<in>...] <out>");
             System.exit(2);
         }
-        Job job = Job.getInstance(conf, "lab4_1");
+        Job job = Job.getInstance(conf, "lab4.lab4_1");
         job.setJarByClass(lab4_1.class);
         job.setMapperClass(lab4_1.TokenizerMapper.class);
         job.setCombinerClass(lab4_1.IntSumReducer_com.class);
@@ -42,8 +43,8 @@ public class lab4_1 {
 
 //        Job job2 = Job.getInstance(conf,"lab4_2_2");
 //        //job2.setJarByClass(inverseTest.class);
-//        job2.setMapperClass(lab4_2.job2Mapper.class);
-//        job2.setReducerClass(lab4_2.job2reducer.class);
+//        job2.setMapperClass(lab4.lab4_2.job2Mapper.class);
+//        job2.setReducerClass(lab4.lab4_2.job2reducer.class);
 //
 //        job2.setMapOutputKeyClass(Text.class);
 //        job2.setMapOutputValueClass(Text.class);

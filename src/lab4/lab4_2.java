@@ -1,3 +1,5 @@
+package lab4;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.StringTokenizer;
@@ -19,7 +21,7 @@ public class lab4_2 {
         Configuration conf = new Configuration();
         String[] otherArgs = (new GenericOptionsParser(conf, args)).getRemainingArgs();
         if(otherArgs.length < 2) {
-            System.err.println("Usage: lab4_2 <in> [<in>...] <out>");
+            System.err.println("Usage: lab4.lab4_2 <in> [<in>...] <out>");
             System.exit(2);
         }
         Job job = Job.getInstance(conf, "lab4_2_1");
