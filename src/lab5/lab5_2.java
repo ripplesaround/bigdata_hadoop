@@ -25,7 +25,7 @@ public class lab5_2 {
             System.err.println("Usage: <in> [<in>...] <out>");
             System.exit(2);
         }
-        Job job = Job.getInstance(conf, "lab5_1");
+        Job job = Job.getInstance(conf, "lab5_2");
         job.setJarByClass(lab5_2.class);
 
         job.setMapperClass(lab5_2.TokenizerMapper.class);
