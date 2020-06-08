@@ -1,0 +1,5 @@
+./bin/hadoop jar ./myapp/bigdata_hadoop.jar history temp input output
+./bin/hdfs dfs -cat temp/*
+./bin/hdfs dfs -cat output/*
+./bin/hdfs dfs -rm -r /user/hadoop/temp
+./bin/hdfs dfs -rm -r /user/hadoop/output
