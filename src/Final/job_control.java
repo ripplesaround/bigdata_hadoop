@@ -20,6 +20,8 @@ import java.net.URI;
 import static Final.itemCF_job2.finalReducer.itemCF_write_in_file;
 import static Final.userCF_job3.finalListReducer.userCF_write_in_file;
 
+import static Final.userCF_job2.usercfjob2Listcombine.coefficient_age;
+import static Final.userCF_job2.usercfjob2Listcombine.coefficient_gender;
 
 public class job_control {
     public static int top_k = 2;   //选相似的k个物品,默认为2
@@ -32,9 +34,11 @@ public class job_control {
         BufferedReader br = new BufferedReader(fr);
         String str = br.readLine();
         otherArgs = str.split(" ");
-        str = br.readLine();
-        top_k = Integer.valueOf(str);
         //可以写一个config来代替输入，更模块化
+        top_k = Integer.valueOf(otherArgs[0]);
+        coefficient_age = Double.valueOf(otherArgs[1]);
+        coefficient_gender = Double.valueOf(otherArgs[2]);
+
 
 
         Path userCF_job1_in = new Path("input");
@@ -43,13 +47,18 @@ public class job_control {
         Path userCF_job3_out = new Path("s3out");
         Path userCF_job_input = new Path("input");
 
+        Path itemCF_job1_in = new Path("history");
+        Path itemCF_job1_out = new Path("j1out");
+        Path itemCF_job2_in = new Path("input");
+        Path itemCF_job2_out = new Path("j3out");
+
         // 删除(存在的)输出文件夹
-        FileSystem fs = FileSystem.get(URI.create(otherArgs[0]), conf);
-        if(fs.exists(new Path(otherArgs[1]))){
-            fs.delete(new Path(otherArgs[1]), true);
+        FileSystem fs = FileSystem.get(URI.create("history"), conf);
+        if(fs.exists(itemCF_job1_out)){
+            fs.delete(itemCF_job1_out, true);
         }
-        if(fs.exists(new Path(otherArgs[3]))){
-            fs.delete(new Path(otherArgs[3]), true);
+        if(fs.exists(itemCF_job2_out)){
+            fs.delete(itemCF_job2_out, true);
         }
         if(fs.exists(userCF_job1_out)){
             fs.delete(userCF_job1_out , true);
@@ -105,8 +114,8 @@ public class job_control {
         itemCF_job1.setMapOutputValueClass(Text.class);
         itemCF_job1.setOutputKeyClass(Text.class);
         itemCF_job1.setOutputValueClass(Text.class);
-        FileInputFormat.addInputPath(itemCF_job1, new Path(otherArgs[0]));
-        FileOutputFormat.setOutputPath(itemCF_job1, new Path(otherArgs[1]));
+        FileInputFormat.addInputPath(itemCF_job1, itemCF_job1_in);
+        FileOutputFormat.setOutputPath(itemCF_job1, itemCF_job1_out);
 
 
         Job itemCF_job2 = Job.getInstance(conf, "itemCF_job2");
@@ -117,8 +126,8 @@ public class job_control {
         itemCF_job2.setMapOutputValueClass(Text.class);
         itemCF_job2.setOutputKeyClass(Text.class);
         itemCF_job2.setOutputValueClass(Text.class);
-        FileInputFormat.addInputPath(itemCF_job2, new Path(otherArgs[2]));
-        FileOutputFormat.setOutputPath(itemCF_job2, new Path(otherArgs[3]));
+        FileInputFormat.addInputPath(itemCF_job2, itemCF_job2_in);
+        FileOutputFormat.setOutputPath(itemCF_job2, itemCF_job2_out);
 
 
         JobControl jobCtrl=new JobControl("myctrl");
