@@ -20,6 +20,8 @@ import org.apache.hadoop.security.SaslOutputStream;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Iterator;
@@ -27,6 +29,7 @@ import java.util.StringTokenizer;
 
 import static Final.s1.TokenizerMapper.item_size;
 import static Final.s1.TokenizerMapper.user_size;
+import static Final.s1.finalReducer.write_in_file;
 import static Final.s1.myReducer.history;
 
 // idea
@@ -85,6 +88,15 @@ public class s1  {
         FileInputFormat.addInputPath(job2, new Path(otherArgs[2]));
         FileOutputFormat.setOutputPath(job2, new Path(otherArgs[3]));
         job2.waitForCompletion(true);
+
+        // 写入到本地方便sql操作
+        FileWriter writer;
+        writer = new FileWriter("recommend_result.txt");
+        writer.write(write_in_file);
+        writer.flush();
+        writer.close();
+        System.out.println("推荐结果写入recommend_result文件");
+
     }
     public static class TokenizerMapper extends Mapper<Object, Text, Text, Text> {
         // age gender 与itemcf无关
@@ -220,7 +232,13 @@ public class s1  {
         public InputMapper() {
         }
         public void map(Object key, Text value, Mapper<Object, Text, Text, Text>.Context context) throws IOException, InterruptedException {
-            String[] s =  value.toString().split("," );
+            String[] s_temp = value.toString().split(" ");
+            if(Character.isAlphabetic(s_temp[0].toCharArray()[0])){
+                // 第一行不扫描
+                return;
+            }
+            String current_user = "user"+ s_temp[0];
+            String[] s =  s_temp[1].toString().split("," );
             for(int i=0;i<item_size;++i){
                 recommend_table[i] = 0.0;
             }
@@ -261,20 +279,32 @@ public class s1  {
                     }
                 }
             }
+            //输出格式
+//            user1   item7   2.9596747752497685
+//            user1   item1   2.4944271909999154
+//            user1   item3   2.9652475842498527
+//            for(int i=0;i<top_k;++i){
+//                context.write(new Text(current_user),new Text(max_index[i]+"\t"+Double.toString(max_rec[i])));
+//            }
+            String result = "";
             for(int i=0;i<top_k;++i){
-                context.write(new Text(max_index[i]),new Text(Double.toString(max_rec[i])));
+                result+=max_index[i];
+                if(i!=top_k-1)
+                    result+=",";
             }
+            context.write(new Text(current_user),new Text(result));
         }
     }
     public static class finalReducer extends Reducer<Text, Text, Text, Text> {
+        public static String write_in_file = "";
         public finalReducer() {
         }
         public void reduce(Text key, Iterable<Text> values, Reducer<Text, Text, Text, Text>.Context context) throws IOException, InterruptedException {
-
             Text val = null;
-
             for(Iterator i$ = values.iterator(); i$.hasNext(); ) {
-                context.write( key,(Text) i$.next());
+                Text temp = (Text) i$.next();
+                write_in_file += (key.toString()+","+temp.toString()+"\n");
+                context.write( key,temp);
             }
         }
     }
