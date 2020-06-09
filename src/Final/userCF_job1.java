@@ -66,12 +66,12 @@ public class userCF_job1 {
         //计算两个user之间的相似度
         Text goodList = new Text();
         // 系数
-        public static double coefficient_age = 0.3;
+        public static double coefficient_age = 0.05;
         public static double coefficient_gender = 1.0;
         @Override
         protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
             Text val = new Text();
-            // 这里根据属性的变化需要修改
+            // 这里根据 属性 的变化需要修改
             int user1_age=0,user2_age=0;
             int user1_gender=-1,user2_gender=-1;
             String user1_history=null,user2_history=null;
@@ -99,8 +99,20 @@ public class userCF_job1 {
             int i_norm=0,j_norm=0;  //范数
             int product = 0;
             for(int i=0;i<user1_temp.length;++i){
-
+                product += (Integer.valueOf(user1_temp[i])*Integer.valueOf(user2_temp[i]));
+                i_norm += (Integer.valueOf(user1_temp[i])*Integer.valueOf(user1_temp[i]));
+                j_norm += (Integer.valueOf(user2_temp[i])*Integer.valueOf(user2_temp[i])) ;
             }
+            double cos_sim_history = product/(Math.sqrt(j_norm)*Math.sqrt(i_norm));
+            // 计算属性相似度
+            // 越想近越相似值越大
+            double con_sim_age = (Math.abs(user1_age-user2_age));
+            double con_sim_gender = (Math.abs(user1_gender-user2_gender));
+
+            double cos_sim = cos_sim_history
+                    + coefficient_age*(Math.abs(user1_age-user2_age))
+                    + coefficient_gender*(Math.abs(user1_gender-user2_gender));
+
 
             context.write(key, val);
         }
