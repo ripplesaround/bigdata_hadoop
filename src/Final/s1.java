@@ -3,6 +3,7 @@ package Final;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
@@ -20,6 +21,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
@@ -30,7 +32,7 @@ import static Final.s1.myReducer.history;
 // idea
 // 第一个任务：相似度矩阵
 
-public class s1 {
+public class s1  {
     static private int top_k = 3;   //选相似的k个物品
 
 
@@ -39,10 +41,17 @@ public class s1 {
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         String[] otherArgs = (new GenericOptionsParser(conf, args)).getRemainingArgs();
+
         if (otherArgs.length < 2) {
             System.err.println("Usage: <in> [<in>...] <out>");
             System.exit(2);
         }
+
+        // 删除输出文件夹
+        FileSystem fs = FileSystem.get(URI.create(args[0]), conf);
+        fs.delete(new Path(otherArgs[1]), true);
+        fs.delete(new Path(otherArgs[3]), true);
+
         Job job1 = Job.getInstance(conf, "s1");
         job1.setJarByClass(s1.class);
 
