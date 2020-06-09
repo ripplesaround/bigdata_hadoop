@@ -2,39 +2,30 @@ package Final;
 
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.DoubleWritable;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
-import org.apache.hadoop.security.SaslOutputStream;
 import org.apache.hadoop.util.GenericOptionsParser;
-import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import static Final.s1.TokenizerMapper.item_size;
-import static Final.s1.TokenizerMapper.user_size;
 import static Final.s1.myReducer.history;
 
 // idea
 // 第一个任务：相似度矩阵
 
-public class s1 {
-    static private int top_k = 3;   //选相似的k个物品
+public class s1_origanl {
+    static private int top_k = 2;   //选相似的k个物品
 
 
-    public s1(){
+    public s1_origanl(){
     }
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
@@ -44,11 +35,11 @@ public class s1 {
             System.exit(2);
         }
         Job job1 = Job.getInstance(conf, "s1");
-        job1.setJarByClass(s1.class);
+        job1.setJarByClass(s1_origanl.class);
 
-        job1.setMapperClass(s1.TokenizerMapper.class);
-        job1.setCombinerClass(s1.IntSumReducer_com.class);
-        job1.setReducerClass(s1.myReducer.class);
+        job1.setMapperClass(s1_origanl.TokenizerMapper.class);
+        job1.setCombinerClass(s1_origanl.IntSumReducer_com.class);
+        job1.setReducerClass(s1_origanl.myReducer.class);
 
         job1.setMapOutputKeyClass(Text.class);
         job1.setMapOutputValueClass(Text.class);
@@ -65,8 +56,8 @@ public class s1 {
         Job job2 = Job.getInstance(conf, "s2");
 //        job2.setJarByClass(s1.class);
 
-        job2.setMapperClass(s1.InputMapper.class);
-        job2.setReducerClass(s1.finalReducer.class);
+        job2.setMapperClass(s1_origanl.InputMapper.class);
+        job2.setReducerClass(s1_origanl.finalReducer.class);
 
         job2.setMapOutputKeyClass(Text.class);
         job2.setMapOutputValueClass(Text.class);
@@ -78,7 +69,6 @@ public class s1 {
         job2.waitForCompletion(true);
     }
     public static class TokenizerMapper extends Mapper<Object, Text, Text, Text> {
-        // age gender 与itemcf无关
         public static int user_size = 0;
         public static int item_size = 0;
         private int cnt_temp =0;
@@ -86,17 +76,13 @@ public class s1 {
         public TokenizerMapper() {
         }
         public void map(Object key, Text value, Mapper<Object, Text, Text, Text>.Context context) throws IOException, InterruptedException {
-            String[] s_temp =  value.toString().split(" " );
-            if(Character.isAlphabetic(s_temp[0].toCharArray()[0])){
-                // 第一行不扫描
-                return;
-            }
-            String[] s = s_temp[1].split(",");
+            String[] s =  value.toString().split(" " );
+            StringTokenizer itr = new StringTokenizer(s[1]);
             item_size = s.length;
-            int temp1 = 1;
+            int temp1 = 0;
 
             for(String buy_cnt1:s){
-                int temp2 = 1;
+                int temp2 = 0;
                 for(String buy_cnt2:s) {
                     this.word.set("item" + temp1+"\titem"+temp2);
                     if (buy_cnt1.equals("1")) {
@@ -211,7 +197,7 @@ public class s1 {
         public InputMapper() {
         }
         public void map(Object key, Text value, Mapper<Object, Text, Text, Text>.Context context) throws IOException, InterruptedException {
-            String[] s =  value.toString().split("," );
+            String[] s =  value.toString().split(" " );
             for(int i=0;i<item_size;++i){
                 recommend_table[i] = 0.0;
             }
@@ -224,7 +210,7 @@ public class s1 {
                         String[] val = temp[j].split("\t");
                         String index = val[0].substring(4);
 //                        context.write(new Text(Integer.toString(temp.length)),new Text(index));
-                        recommend_table[Integer.valueOf(index)-1] += Double.valueOf(val[1]);
+                        recommend_table[Integer.valueOf(index)] += Double.valueOf(val[1]);
                     }
 
                 }
@@ -246,7 +232,7 @@ public class s1 {
                             max_index[j] = max_index[j-1];
                         }
                         max_rec[i] = recommend_table[cnt];
-                        max_index[i] = "item"+(cnt+1);
+                        max_index[i] = "item"+cnt;
                         i+=top_k;
     //                        break;
                     }
