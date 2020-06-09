@@ -23,11 +23,9 @@ import java.util.Iterator;
 
 import static Final.itemCF_job2.finalReducer.write_in_file;
 
-// idea
-// 第一个任务：相似度矩阵
 
 public class job_control {
-    public static int top_k = 3;   //选相似的k个物品
+    public static int top_k = 2;   //选相似的k个物品,默认为2
     public job_control(){
     }
     public static void main(String[] args) throws Exception {
@@ -37,19 +35,11 @@ public class job_control {
         BufferedReader br = new BufferedReader(fr);
         String str = br.readLine();
         otherArgs = str.split(" ");
-        //可以写一个config来代替输入
-//        if (otherArgs.length < 2) {
-//            FileReader fr=new FileReader("config");
-//            BufferedReader br = new BufferedReader(fr);
-//            String str = br.readLine();
-//            otherArgs = str.split(" ");
-////            System.err.println("Usage: <in> [<in>...] <out>");
-////            System.exit(2);
-//        }
+        str = br.readLine();
+        top_k = Integer.valueOf(str);
+        //可以写一个config来代替输入，更模块化
 
-        // 删除输出文件夹
-        //arg[0]
-//        System.out.println(otherArgs[0]);
+        // 删除(存在的)输出文件夹
         FileSystem fs = FileSystem.get(URI.create(otherArgs[0]), conf);
         if(fs.exists(new Path(otherArgs[1]))){
             fs.delete(new Path(otherArgs[1]), true);
@@ -58,49 +48,41 @@ public class job_control {
             fs.delete(new Path(otherArgs[3]), true);
         }
 
-        Job job1 = Job.getInstance(conf, "s1");
-        job1.setJarByClass(job_control.class);
-        job1.setMapperClass(itemCF_job1.TokenizerMapper.class);
-        job1.setCombinerClass(itemCF_job1.IntSumReducer_com.class);
-        job1.setReducerClass(itemCF_job1.myReducer.class);
-
-        job1.setMapOutputKeyClass(Text.class);
-        job1.setMapOutputValueClass(Text.class);
-
-        job1.setOutputKeyClass(Text.class);
-        job1.setOutputValueClass(Text.class);
-//        for (int i = 0; i < otherArgs.length - 1; ++i) {
-//            FileInputFormat.addInputPath(job1, new Path(otherArgs[i]));
-//        }
-        FileInputFormat.addInputPath(job1, new Path(otherArgs[0]));
-        FileOutputFormat.setOutputPath(job1, new Path(otherArgs[1]));
+        Job itemCF_job1 = Job.getInstance(conf, "s1");
+        itemCF_job1.setJarByClass(job_control.class);
+        itemCF_job1.setMapperClass(itemCF_job1.TokenizerMapper.class);
+        itemCF_job1.setCombinerClass(itemCF_job1.IntSumReducer_com.class);
+        itemCF_job1.setReducerClass(itemCF_job1.myReducer.class);
+        itemCF_job1.setMapOutputKeyClass(Text.class);
+        itemCF_job1.setMapOutputValueClass(Text.class);
+        itemCF_job1.setOutputKeyClass(Text.class);
+        itemCF_job1.setOutputValueClass(Text.class);
+        FileInputFormat.addInputPath(itemCF_job1, new Path(otherArgs[0]));
+        FileOutputFormat.setOutputPath(itemCF_job1, new Path(otherArgs[1]));
 
 
-        Job job2 = Job.getInstance(conf, "s2");
-//        job2.setJarByClass(s1.class);
-
-        job2.setMapperClass(itemCF_job2.InputMapper.class);
-        job2.setReducerClass(itemCF_job2.finalReducer.class);
-
-        job2.setMapOutputKeyClass(Text.class);
-        job2.setMapOutputValueClass(Text.class);
-
-        job2.setOutputKeyClass(Text.class);
-        job2.setOutputValueClass(Text.class);
-        FileInputFormat.addInputPath(job2, new Path(otherArgs[2]));
-        FileOutputFormat.setOutputPath(job2, new Path(otherArgs[3]));
+        Job itemCF_job2 = Job.getInstance(conf, "s2");
+        itemCF_job2.setJarByClass(job_control.class);
+        itemCF_job2.setMapperClass(itemCF_job2.InputMapper.class);
+        itemCF_job2.setReducerClass(itemCF_job2.finalReducer.class);
+        itemCF_job2.setMapOutputKeyClass(Text.class);
+        itemCF_job2.setMapOutputValueClass(Text.class);
+        itemCF_job2.setOutputKeyClass(Text.class);
+        itemCF_job2.setOutputValueClass(Text.class);
+        FileInputFormat.addInputPath(itemCF_job2, new Path(otherArgs[2]));
+        FileOutputFormat.setOutputPath(itemCF_job2, new Path(otherArgs[3]));
 
 
         JobControl jobCtrl=new JobControl("myctrl");
-        ControlledJob cjob1 = new ControlledJob(conf);
-        ControlledJob cjob2 = new ControlledJob(conf);
-        cjob1.setJob(job1);
-        cjob2.setJob(job2);
+        ControlledJob citemCF_job1 = new ControlledJob(conf);
+        ControlledJob citemCF_job2 = new ControlledJob(conf);
+        citemCF_job1.setJob(itemCF_job1);
+        citemCF_job2.setJob(itemCF_job2);
 
-        cjob2.addDependingJob(cjob1);
+        citemCF_job2.addDependingJob(citemCF_job1);
 
-        jobCtrl.addJob(cjob1);
-        jobCtrl.addJob(cjob2);
+        jobCtrl.addJob(citemCF_job1);
+        jobCtrl.addJob(citemCF_job2);
 
         Thread jcThread = new Thread(jobCtrl);
         jcThread.start();
