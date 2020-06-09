@@ -1,0 +1,9 @@
+user1,item5,item7,item3
+user2,item5,item1,item6
+user3,item5,item7,item3
+user4,item3,item7,item5
+user5,item7,item5,item3
+user6,item7,item5,item3
+user7,item2,item6,item7
+user8,item5,item3,item1
+user9,item7,item3,item1

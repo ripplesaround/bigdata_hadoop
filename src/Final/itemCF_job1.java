@@ -87,8 +87,8 @@ public class itemCF_job1 {
     }
 
     public static class myReducer extends Reducer<Text, Text, Text, Text> {
-        public static String history = "";
-
+        public static String itemCF_history = "";
+        public static String itemCF_history_index = "";
         public myReducer() {
         }
         @Override
@@ -134,7 +134,8 @@ public class itemCF_job1 {
                 }
             }
             context.write( key,new Text(ans));
-            history += (key.toString()+"$$"+ans+"\n");
+            itemCF_history += (key.toString()+"$$"+ans+"\n");
+            itemCF_history_index += (key.toString()+"\n");
         }
     }
 }
