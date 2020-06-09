@@ -14,6 +14,8 @@ import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
@@ -31,14 +33,24 @@ public class job_control {
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         String[] otherArgs = (new GenericOptionsParser(conf, args)).getRemainingArgs();
-
-        if (otherArgs.length < 2) {
-            System.err.println("Usage: <in> [<in>...] <out>");
-            System.exit(2);
-        }
+        FileReader fr=new FileReader("config");
+        BufferedReader br = new BufferedReader(fr);
+        String str = br.readLine();
+        otherArgs = str.split(" ");
+        //可以写一个config来代替输入
+//        if (otherArgs.length < 2) {
+//            FileReader fr=new FileReader("config");
+//            BufferedReader br = new BufferedReader(fr);
+//            String str = br.readLine();
+//            otherArgs = str.split(" ");
+////            System.err.println("Usage: <in> [<in>...] <out>");
+////            System.exit(2);
+//        }
 
         // 删除输出文件夹
-        FileSystem fs = FileSystem.get(URI.create(args[0]), conf);
+        //arg[0]
+//        System.out.println(otherArgs[0]);
+        FileSystem fs = FileSystem.get(URI.create(otherArgs[0]), conf);
         if(fs.exists(new Path(otherArgs[1]))){
             fs.delete(new Path(otherArgs[1]), true);
         }
