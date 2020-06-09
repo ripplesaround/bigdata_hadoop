@@ -90,12 +90,13 @@ public class s1  {
         job2.waitForCompletion(true);
 
         // 写入到本地方便sql操作
+        String filename = "recommend_result.txt";
         FileWriter writer;
-        writer = new FileWriter("recommend_result.txt");
+        writer = new FileWriter(filename);
         writer.write(write_in_file);
         writer.flush();
         writer.close();
-        System.out.println("推荐结果写入recommend_result文件");
+        System.out.println("基于itemCF的推荐结果写入 recommend_result 文件");
 
     }
     public static class TokenizerMapper extends Mapper<Object, Text, Text, Text> {
