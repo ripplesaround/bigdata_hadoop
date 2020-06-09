@@ -54,10 +54,10 @@ public class itemCF_job1 {
         }
     }
 
-    public static class IntSumReducer_com extends Reducer<Text, Text, Text, Text> {
+    public static class Combine_toVector extends Reducer<Text, Text, Text, Text> {
         // 构造向量乘法
         private Text result = new Text();
-        public IntSumReducer_com() {
+        public Combine_toVector() {
         }
         @Override
         public void reduce(Text key, Iterable<Text> values, Reducer<Text, Text, Text, Text>.Context context) throws IOException, InterruptedException {
