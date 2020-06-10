@@ -1,0 +1,5 @@
+sqlpy.javamysql -y root -p    密码
+create database recommend;
+use recommend;
+create table result(user_name varchar(20) PRIMARY KEY,recommend1 varchar(20),recommend2 varchar(20),recommend3 varchar(20));
+desc result;
