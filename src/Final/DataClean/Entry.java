@@ -1,4 +1,4 @@
-package DataClean;
+package Final.DataClean;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,8 +12,8 @@ import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import DataClean.DataClean;
-import DataClean.GoodsList;
-import DataClean.UserGoodsMatrix;
+import Final.DataClean.GoodsList;
+import Final.DataClean.UserGoodsMatrix;
 
 public class Entry {
 	public static void main(String[] args) throws Exception{

@@ -41,19 +41,19 @@ public class job_control {
 
 
 
-        Path userCF_job1_in = new Path("input");
+        Path userCF_job1_in = new Path("recinput");
         Path userCF_job1_out = new Path("s1out");
         Path userCF_job2_out = new Path("s2out");
         Path userCF_job3_out = new Path("s3out");
         Path userCF_job_input = new Path("input");
 
-        Path itemCF_job1_in = new Path("history");
+        Path itemCF_job1_in = new Path("rechistory");
         Path itemCF_job1_out = new Path("j1out");
         Path itemCF_job2_in = new Path("input");
         Path itemCF_job2_out = new Path("j3out");
 
         // 删除(存在的)输出文件夹
-        FileSystem fs = FileSystem.get(URI.create("history"), conf);
+        FileSystem fs = FileSystem.get(URI.create("rechistory"), conf);
         if(fs.exists(itemCF_job1_out)){
             fs.delete(itemCF_job1_out, true);
         }
