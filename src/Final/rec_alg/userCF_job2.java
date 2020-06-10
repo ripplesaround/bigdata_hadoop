@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import static Final.rec_alg.job_control.top_k;
 import static Final.rec_alg.userCF_job1.TokenListMapper.item_num;
+import static java.lang.Double.NEGATIVE_INFINITY;
 
 public class userCF_job2 {
     public static  class TokensListMapper extends Mapper<LongWritable, Text,Text,Text> {
@@ -66,15 +67,16 @@ public class userCF_job2 {
             double cos_sim_history = product/(Math.sqrt(j_norm)*Math.sqrt(i_norm));
             // 计算属性相似度
             // 越想近越相似值越大
-            double cos_sim_age = Math.cos((Math.abs(user1_age-user2_age))
-                                    /(Math.max(user1_age,user2_age)));
+
+            double cos_sim_age = (Math.abs(user1_age-user2_age))
+                                    /(Math.min(user1_age,user2_age));
             double cos_sim_gender =  Math.cos(Math.abs(user1_gender-user2_gender));
 
             double cos_sim = cos_sim_history
-                    + coefficient_age * cos_sim_age
+                    - coefficient_age * cos_sim_age
                     + coefficient_gender * cos_sim_gender;
 
-
+//            System.out.println("  "+cos_sim_age+"  "+cos_sim_gender);
             // 要记录对方的行为模式
             context.write(new Text(user1_name), new Text(user2_name+"\t"+String.valueOf(cos_sim)+"\t"+user2_history));
         }
@@ -88,7 +90,7 @@ public class userCF_job2 {
             String max_index[] = new String[top_k];
             String max_index_history[] = new String[top_k];
             for(int i=0;i<top_k;++i){
-                max_con_sim[i] = 0.0;
+                max_con_sim[i] = NEGATIVE_INFINITY;
                 max_index[i] = "$noone";
                 max_index_history[i] = "$nothing";
             }

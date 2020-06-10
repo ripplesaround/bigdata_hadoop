@@ -184,15 +184,19 @@ public class job_control {
         FileWriter writer;
         writer = new FileWriter(filename);
         writer.write(itemCF_write_in_file);
+        itemCF_write_in_file = "";
         writer.flush();
         writer.close();
         System.out.println("基于itemCF的推荐结果写入 recommend_result_itemCF 文件");
         filename = "recommend_result_userCF.txt";
         writer = new FileWriter(filename);
         writer.write(userCF_write_in_file);
+        userCF_write_in_file = "";
         writer.flush();
         writer.close();
         System.out.println("基于userCF的推荐结果写入 recommend_result_userCF 文件");
+//        System.out.println(coefficient_age);
+//        System.out.println(coefficient_gender);
     }
 
 }
