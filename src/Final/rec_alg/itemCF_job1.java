@@ -1,4 +1,4 @@
-package Final;
+package Final.rec_alg;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -6,7 +6,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
 import java.util.Iterator;
-import static Final.job_control.top_k;
+import static Final.rec_alg.job_control.top_k;
 
 public class itemCF_job1 {
     public static class TokenizerMapper extends Mapper<Object, Text, Text, Text> {

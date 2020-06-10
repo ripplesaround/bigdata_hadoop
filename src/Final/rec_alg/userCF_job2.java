@@ -1,4 +1,4 @@
-package Final;
+package Final.rec_alg;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -7,8 +7,8 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
 
-import static Final.job_control.top_k;
-import static Final.userCF_job1.TokenListMapper.item_num;
+import static Final.rec_alg.job_control.top_k;
+import static Final.rec_alg.userCF_job1.TokenListMapper.item_num;
 
 public class userCF_job2 {
     public static  class TokensListMapper extends Mapper<LongWritable, Text,Text,Text> {

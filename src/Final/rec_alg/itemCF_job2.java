@@ -1,4 +1,4 @@
-package Final;
+package Final.rec_alg;
 
 
 import org.apache.hadoop.io.Text;
@@ -10,10 +10,10 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import static Final.itemCF_job1.TokenizerMapper.item_size;
-import static Final.itemCF_job1.myReducer.itemCF_history;
-import static Final.itemCF_job1.myReducer.itemCF_history_index;
-import static Final.job_control.top_k;
+import static Final.rec_alg.itemCF_job1.TokenizerMapper.item_size;
+import static Final.rec_alg.itemCF_job1.myReducer.itemCF_history;
+import static Final.rec_alg.itemCF_job1.myReducer.itemCF_history_index;
+import static Final.rec_alg.job_control.top_k;
 
 public class itemCF_job2 {
     public static class InputMapper extends Mapper<Object, Text, Text, Text> {

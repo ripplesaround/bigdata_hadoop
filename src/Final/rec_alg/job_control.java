@@ -1,4 +1,4 @@
-package Final;
+package Final.rec_alg;
 
 
 import org.apache.hadoop.conf.Configuration;
@@ -17,11 +17,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.net.URI;
 
-import static Final.itemCF_job2.finalReducer.itemCF_write_in_file;
-import static Final.userCF_job3.finalListReducer.userCF_write_in_file;
+import static Final.rec_alg.itemCF_job2.finalReducer.itemCF_write_in_file;
+import static Final.rec_alg.userCF_job3.finalListReducer.userCF_write_in_file;
 
-import static Final.userCF_job2.usercfjob2Listcombine.coefficient_age;
-import static Final.userCF_job2.usercfjob2Listcombine.coefficient_gender;
+import static Final.rec_alg.userCF_job2.usercfjob2Listcombine.coefficient_age;
+import static Final.rec_alg.userCF_job2.usercfjob2Listcombine.coefficient_gender;
 
 public class job_control {
     public static int top_k = 2;   //选相似的k个物品,默认为2
@@ -75,9 +75,9 @@ public class job_control {
 
         Job userCF_job1 = Job.getInstance(conf,"userCF_job1");
         userCF_job1.setJarByClass(job_control.class);
-        userCF_job1.setMapperClass(Final.userCF_job1.TokenListMapper.class);
-        userCF_job1.setCombinerClass(Final.userCF_job1.ListCombiner.class);
-        userCF_job1.setReducerClass(Final.userCF_job1.ListReducer_cal_sum.class);
+        userCF_job1.setMapperClass(Final.rec_alg.userCF_job1.TokenListMapper.class);
+        userCF_job1.setCombinerClass(Final.rec_alg.userCF_job1.ListCombiner.class);
+        userCF_job1.setReducerClass(Final.rec_alg.userCF_job1.ListReducer_cal_sum.class);
         userCF_job1.setMapOutputKeyClass(Text.class);
         userCF_job1.setOutputValueClass(Text.class);
         userCF_job1.setOutputKeyClass(Text.class);
@@ -87,9 +87,9 @@ public class job_control {
 
         Job userCF_job2 = Job.getInstance(conf,"userCF_job2");
         userCF_job2.setJarByClass(job_control.class);
-        userCF_job2.setMapperClass(Final.userCF_job2.TokensListMapper.class);
+        userCF_job2.setMapperClass(Final.rec_alg.userCF_job2.TokensListMapper.class);
         userCF_job2.setCombinerClass(userCF_job2.usercfjob2Listcombine.class);
-        userCF_job2.setReducerClass(Final.userCF_job2.usercfjob2ListReducer.class);
+        userCF_job2.setReducerClass(Final.rec_alg.userCF_job2.usercfjob2ListReducer.class);
         userCF_job2.setOutputKeyClass(Text.class);
         userCF_job2.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(userCF_job2,userCF_job1_out);
@@ -108,7 +108,7 @@ public class job_control {
         Job itemCF_job1 = Job.getInstance(conf, "itemCF_job1");
         itemCF_job1.setJarByClass(job_control.class);
         itemCF_job1.setMapperClass(itemCF_job1.TokenizerMapper.class);
-        itemCF_job1.setCombinerClass(Final.itemCF_job1.Combine_toVector.class);
+        itemCF_job1.setCombinerClass(Final.rec_alg.itemCF_job1.Combine_toVector.class);
         itemCF_job1.setReducerClass(itemCF_job1.myReducer.class);
         itemCF_job1.setMapOutputKeyClass(Text.class);
         itemCF_job1.setMapOutputValueClass(Text.class);

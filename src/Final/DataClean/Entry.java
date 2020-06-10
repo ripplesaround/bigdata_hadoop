@@ -19,8 +19,11 @@ public class Entry {
 	public static void main(String[] args) throws Exception{
 		Configuration conf = new Configuration();  
         if (args.length != 2) {
-            System.err.println("参数错误");
-            System.exit(2);
+//            System.err.println("参数错误");
+//            System.exit(2);
+			args = new String[2];
+			args[0] = "input/file0";
+			args[1] = "recinput/test4";
         }
       	FileSystem fs = FileSystem.get(conf);  
 
@@ -62,7 +65,7 @@ public class Entry {
       	BufferedWriter out = new BufferedWriter(new OutputStreamWriter(fout, "UTF-8"));
       	out.write(v1);
       	out.close();
-      	 
+
       	return ;
 	}
 }
