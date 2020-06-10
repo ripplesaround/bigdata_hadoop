@@ -19,6 +19,7 @@ public class itemCF_job2 {
     public static class InputMapper extends Mapper<Object, Text, Text, Text> {
 
         public static double recommend_table[] = new double[item_size];
+        public static String[] item_ref = new String[item_size];
         String[] history_table = itemCF_history.split("\n");
         String[] history_table_index_temp = itemCF_history_index.split("\n");
         List<String> history_table_index = Arrays.asList(history_table_index_temp);
@@ -28,7 +29,13 @@ public class itemCF_job2 {
         public void map(Object key, Text value, Mapper<Object, Text, Text, Text>.Context context) throws IOException, InterruptedException {
             String[] s_temp = value.toString().split(" ");
             if(Character.isAlphabetic(s_temp[0].toCharArray()[0])){
-                // 第一行不扫描
+                // 第一行扫描名称
+                // 保证名称和序号对应 11->2
+                String[] s1=s_temp[1].split("\\(|\\)");
+                String[] s2 = s1[1].split(",");
+                for(int i=0;i<s2.length;++i){
+                    item_ref[i] = "item"+s2[i];
+                }
                 return;
             }
             String current_user = "user"+ s_temp[0];
@@ -48,10 +55,6 @@ public class itemCF_job2 {
 //                        context.write(new Text(Integer.toString(temp.length)),new Text(index));
                         recommend_table[Integer.valueOf(index)-1] += Double.valueOf(val[1]);
                     }
-
-                }
-                else {
-                    //0 表示用户没有和该商品互动过
                 }
             }
             double max_rec[] = new double[top_k];
@@ -83,7 +86,9 @@ public class itemCF_job2 {
 //            }
             String result = "";
             for(int i=0;i<top_k;++i){
-                result+=max_index[i];
+                // 最后要换成初始的label
+                int index = Integer.valueOf(max_index[i].substring(4));
+                result+= item_ref[index];
                 if(i!=top_k-1)
                     result+=",";
             }
