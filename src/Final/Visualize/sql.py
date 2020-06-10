@@ -1,8 +1,10 @@
 #-*- coding: utf-8 -*-
-from pymysql import *
+# from pymysql import *
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
+
+
 
 # 商品id变化范围
 N=50
@@ -68,23 +70,23 @@ class Mysqlpython:
 # 主函数
 if __name__ == "__main__":
     # 此处输入替换为本地数据库名
-    sqlh = Mysqlpython("recommend") 
+#     sqlh = Mysqlpython("recommend")
     # 打印当前内容
-    sel = "select * from result"
-    r = sqlh.all(sel)
-    print(r)
+#     sel = "select * from result"
+#     r = sqlh.all(sel)
+#     print(r)
     
     fr=open(matrix_path)
-    sqlh.delete()
+#     sqlh.delete()
     count = 0
     recommend = np.zeros((N,1))
     for line in fr.readlines():
         #逐行读取
         lineArr=line.strip().split(',')
         print(lineArr)
-        sql = "INSERT INTO result (user_name,recommend1,recommend2,recommend3) VALUES ("+ str(lineArr[0]) +","+str(lineArr[1])+","+str(lineArr[2])+","+str(lineArr[3])+");"
-        print(sql)
-        sqlh.insert(sql)
+#         sql = "INSERT INTO result (user_name,recommend1,recommend2,recommend3) VALUES ("+ str(lineArr[0]) +","+str(lineArr[1])+","+str(lineArr[2])+","+str(lineArr[3])+");"
+#         print(sql)
+#         sqlh.insert(sql)
         count += 1
         # 统计商品被推荐次数
         recommend[int(lineArr[1])] += 1
@@ -92,12 +94,12 @@ if __name__ == "__main__":
         recommend[int(lineArr[3])] += 1
 
 
-# 可视化
-y= []
-for i in range(N):
-    y.append(recommend[i][0])
-index = np.arange(N)
-pl = plt.bar(x=index,height=y,color='blue',width=0.8)
-plt.xlabel('item id')
-plt.ylabel('recommended times')
-plt.show()
+    # 可视化
+    y= []
+    for i in range(N):
+        y.append(recommend[i][0])
+    index = np.arange(N)
+    pl = plt.bar(x=index,height=y,color='blue',width=0.8)
+    plt.xlabel('item id')
+    plt.ylabel('recommended times')
+    plt.show()

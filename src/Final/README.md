@@ -22,3 +22,6 @@ coefficient_gender：性别的占比，默认为1.0;
 - [ ] 将结果可视化，形成不同算法的对比
 #### 存入mysql
 - [ ] 存入mysql，但本人的虚拟机安装mysql失败
+
+### 注意
+运行前先清空recinput文件夹

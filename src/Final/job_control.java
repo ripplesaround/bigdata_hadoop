@@ -53,7 +53,7 @@ public class job_control {
         Path itemCF_job2_out = new Path("j3out");
 
         // 删除(存在的)输出文件夹
-        FileSystem fs = FileSystem.get(URI.create("rechistory"), conf);
+        FileSystem fs = FileSystem.get(URI.create("recinput"), conf);
         if(fs.exists(itemCF_job1_out)){
             fs.delete(itemCF_job1_out, true);
         }
@@ -114,7 +114,9 @@ public class job_control {
         itemCF_job1.setMapOutputValueClass(Text.class);
         itemCF_job1.setOutputKeyClass(Text.class);
         itemCF_job1.setOutputValueClass(Text.class);
-        FileInputFormat.addInputPath(itemCF_job1, itemCF_job1_in);
+        //两个输入一样，省了复制的一步
+        FileInputFormat.addInputPath(itemCF_job1, userCF_job1_in);
+//        FileInputFormat.addInputPath(itemCF_job1, itemCF_job1_in);
         FileOutputFormat.setOutputPath(itemCF_job1, itemCF_job1_out);
 
 
