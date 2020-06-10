@@ -1,7 +1,6 @@
 # bigdata_hadoop 最终课程大作业
 ### 题目
-基于userCF与itemCF推荐算法的推荐系统，对购买记录进行处理后利用userCF与itemCF进行推
-荐，并将结果可视化**对比**，最后将结果存储到mysql中
+基于userCF与itemCF推荐算法的推荐系统，对购买记录进行处理后利用userCF与itemCF进行推荐，并将结果可视化**对比**，最后将结果存储到mysql中
 
 ### 数据规模
 购买记录三千条，已去除敏感信息
